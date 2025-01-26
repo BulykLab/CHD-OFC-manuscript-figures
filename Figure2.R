@@ -3,7 +3,6 @@ library(forcats)
 library(cowplot)
 library(patchwork)
 library(dplyr)
-#library(qvalue)
 library(ggsignif)
 library(purrr)
 library(stringr)
@@ -24,13 +23,13 @@ tada_chd_filtered <- tada_chd %>% filter((qval < 0.1) & (oe_lof_upper < 1))
 tada_chd_filtered$BF_pos_all <- apply(tada_chd_filtered[c('BF.misA', 'BF.misB','BF.pLoF')], 1, function(x) prod(x[x > 1], na.rm = TRUE))
 
 ###
-BF.misA <- tada_chd_filtered %>% select(gene, BF.misA, BF_pos_all)  #tada_chd_filtered[,c(1,9,13)]
+BF.misA <- tada_chd_filtered %>% select(gene, BF.misA, BF_pos_all)  
 BF.misA$type <- "MisA"
 colnames(BF.misA) <- c("gene", "BF", "BF_pos_all", "type")
-BF.misB <- tada_chd_filtered %>% select(gene, BF.misB, BF_pos_all) #tada_chd_filtered[,c(1,10,13)]
+BF.misB <- tada_chd_filtered %>% select(gene, BF.misB, BF_pos_all) 
 BF.misB$type <- "MisB"
 colnames(BF.misB) <- c("gene", "BF", "BF_pos_all","type")
-BF.plof <- tada_chd_filtered %>% select(gene, BF.pLoF, BF_pos_all) #tada_chd_filtered[,c(1,11,13)]
+BF.plof <- tada_chd_filtered %>% select(gene, BF.pLoF, BF_pos_all) 
 BF.plof$type <- "pLoF"
 colnames(BF.plof) <- c("gene", "BF", "BF_pos_all","type")
 
@@ -39,19 +38,19 @@ chd_BF_merged$TF <-  ifelse(chd_BF_merged$gene %in% tfs, "TF", "")
 ###
 
 ### Counts
-count.misA <- tada_chd_filtered %>% select(gene, dn.misA, BF_pos_all) #tada_chd_filtered[,c(1,4,13)]
+count.misA <- tada_chd_filtered %>% select(gene, dn.misA, BF_pos_all) 
 count.misA$type <- "denovo_misA"
 colnames(count.misA) <- c("gene", "count", "BF_pos_all", "type")
-count.misB <- tada_chd_filtered %>% select(gene, dn.misB, BF_pos_all) #tada_chd_filtered[,c(1,5,13)]
+count.misB <- tada_chd_filtered %>% select(gene, dn.misB, BF_pos_all)
 count.misB$type <- "denovo_misB"
 colnames(count.misB) <- c("gene", "count", "BF_pos_all","type")
-count.plof <- tada_chd_filtered %>% select(gene, dn.pLoF, BF_pos_all) #tada_chd_filtered[,c(1,6,13)]
+count.plof <- tada_chd_filtered %>% select(gene, dn.pLoF, BF_pos_all)
 count.plof$type <- "denovo_pLoF"
 colnames(count.plof) <- c("gene", "count", "BF_pos_all","type")
-count.caseplof <- tada_chd_filtered %>% select(gene, case.pLoF, BF_pos_all) #tada_chd_filtered[,c(1,7,13)]
+count.caseplof <- tada_chd_filtered %>% select(gene, case.pLoF, BF_pos_all)
 count.caseplof$type <- "case_pLoF"
 colnames(count.caseplof) <- c("gene", "count", "BF_pos_all","type")
-count.ctrlplof <- tada_chd_filtered %>% select(gene, ctrl.pLoF, BF_pos_all) #tada_chd_filtered[,c(1,8,13)]
+count.ctrlplof <- tada_chd_filtered %>% select(gene, ctrl.pLoF, BF_pos_all)
 count.ctrlplof$type <- "control_pLoF"
 colnames(count.ctrlplof) <- c("gene", "count", "BF_pos_all","type")
 
@@ -59,7 +58,6 @@ chd_count_merged <- rbind(count.misA, count.misB, count.plof, count.caseplof, co
 
 chd_count_merged_filtered <- chd_count_merged %>% filter((count > 0))
 
-#BF_merged$TF <-  ifelse(BF_merged$gene %in% tfs, "TF", "")
 
 title <- "Congenital heart defect"
 p_2A_top <- chd_BF_merged %>%  mutate(type = factor(type, levels=c("MisB", "MisA", "pLoF"))) %>%
@@ -83,7 +81,6 @@ p_2A_top <- chd_BF_merged %>%  mutate(type = factor(type, levels=c("MisB", "MisA
   scale_fill_manual(values=c("#ffe7b7", "#F7AA58", "#B84E43")) +
   scale_color_manual(values=c("white", "#00B0F0"))
 
-# "#E76254"
 
 
 chd_BF_merged %>%  mutate(type = factor(type, levels=c("MisB", "MisA", "pLoF"))) %>%
@@ -138,9 +135,6 @@ p_2A <- p_2A_top + p_2A_bottom + plot_layout(nrow=2)
 p_2A
 
 #### OC
-
-
-#tada_oc <- read.table("~/Library/CloudStorage/GoogleDrive-rjeong@g.harvard.edu/My Drive/Manuscript/KidsFirst/draft/data/tada_result/oc.denovo_cc.with_loeuf.080623.txt", header=T)
 tada_oc <- read.table("data/oc.denovo_cc.with_loeuf.112823.txt", header=T)
 
 
@@ -183,33 +177,11 @@ count.ctrlplof$type <- "control_pLoF"
 colnames(count.ctrlplof) <- c("gene", "count", "BF_pos_all","type")
 
 oc_count_merged <- rbind(count.misA, count.misB, count.plof, count.caseplof, count.ctrlplof)
-
 oc_count_merged_filtered <- oc_count_merged %>% filter((count > 0))
 
 title <- "Orofacial cleft"
 p_2B_top <- tada_oc_cc_BF_merged %>% mutate(type = factor(type, levels=c("MisB", "MisA", "pLoF"))) %>%
 ggplot(aes(x=fct_reorder(gene, log10(BF_pos_all), .desc=T))) + geom_col(aes( y=log10(BF), fill=type), color='black',size=0.4, width=1) +
-  theme_classic() +
-  geom_point(aes(y=log10(BF_pos_all)+1.67, color=TF), size = 2) +
-  labs(title="Orofacial cleft", size=12) +
-  theme(axis.title.x = element_blank(), axis.title.y = element_text(size=12), 
-        axis.text.x = element_blank(),
-        axis.text.y = element_text(size=10),
-        legend.position = 'none', aspect.ratio = 0.3,
-        plot.title = element_text(
-          hjust = 1e-2,
-          margin = margin(b = -12 * (stringr::str_count(title, "\n") + 1))),
-        plot.background = element_rect(fill='transparent', color=NA)
-  ) +
-  labs(y=expression(log[10]*"(BF)")) +
-  scale_x_discrete(expand = expansion(mult = c(0,0))) +
-  scale_y_continuous(expand = expansion(mult = c(0,0)), limits=c(0,24)) +
-  scale_fill_manual(values=c("#ffe7b7", "#F7AA58", "#B84E43"))+
-  scale_color_manual(values=c("white", "#00B0F0"))
-
-tada_oc_cc_BF_merged %>% 
-  mutate(type = factor(type, levels=c("pLoF", "MisA", "MisB"))) %>%
-  ggplot(aes(x=fct_reorder(gene, log10(BF_pos_all), .desc=T))) + geom_col(aes( y=log10(BF), fill=type), color='black',size=0.4, width=1) +
   theme_classic() +
   geom_point(aes(y=log10(BF_pos_all)+1.67, color=TF), size = 2) +
   labs(title="Orofacial cleft", size=12) +
@@ -256,11 +228,13 @@ p_2B_bottom <- oc_count_merged %>%
 p_2B <- p_2B_top + p_2B_bottom + plot_layout(nrow=2)
 p_2B
 
+
+
+
 ### TF enrichment
 
 ## CHD
 fisher.test(matrix(c(14,1625,58,17488-1639 - 58), nrow = 2), alternative = 'greater')
-
 
 ## OC
 fisher.test(matrix(c(8,1631,28,17488-7 - 1632 - 28), nrow = 2), alternative = 'greater')
