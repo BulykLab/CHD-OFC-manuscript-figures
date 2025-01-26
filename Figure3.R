@@ -3,7 +3,6 @@ library(forcats)
 library(cowplot)
 library(patchwork)
 library(dplyr)
-library(qvalue)
 library(ggsignif)
 library(purrr)
 
@@ -11,10 +10,10 @@ library(purrr)
 
 ## Figure 3 - TADA result
 
-tada_chd_comparison <- read.table("~/Library/CloudStorage/GoogleDrive-rjeong@g.harvard.edu/My Drive/Manuscript/KidsFirst/draft/data/tada_result/chd.tada_comparison.080623.txt", header=T)
+tada_chd_comparison <- read.table("data/chd.tada_comparison.080623.txt", header=T)
 
 
-p_4_3 <-
+p_3 <-
 tada_chd_comparison %>% filter(category != "both") %>% 
   ggplot(aes(x=category, y=cds_length)) + theme_classic() +
   geom_violin(aes(color=category, fill=category), alpha = 0.5) +
@@ -33,8 +32,8 @@ tada_chd_comparison %>% filter(category != "both") %>%
   ) 
 
 
-ggsave('~/Library/CloudStorage/GoogleDrive-rjeong@g.harvard.edu/My Drive/Manuscript/KidsFirst/draft/figures/Figure3.pdf', 
-       plot = p_4_3, 
+ggsave('figures/Figure3.pdf', 
+       plot = p_3, 
        width=120, height=120, units="mm")
 
 ## p = 0.0197
@@ -44,7 +43,7 @@ wilcox.test( x = as.numeric((tada_chd_comparison %>% filter(category == "denovo_
 
 ### OC
 
-tada_oc_comparison <- read.table("~/Library/CloudStorage/GoogleDrive-rjeong@g.harvard.edu/My Drive/Manuscript/KidsFirst/draft/data/tada_result/oc.tada_comparison.120123.txt", header=T)
+tada_oc_comparison <- read.table("data/oc.tada_comparison.120123.txt", header=T)
 
 
 p_3_supp <-
@@ -64,9 +63,8 @@ p_3_supp <-
     y_position = 16800, xmin = c(1), xmax = c(2),
     annotation = rep("*", 1), tip_length = 0.01, textsize = 6, vjust = 0.4
   ) 
-p_3_supp
 
-ggsave('~/Library/CloudStorage/GoogleDrive-rjeong@g.harvard.edu/My Drive/Manuscript/KidsFirst/draft/figures/Figure_supp3.pdf', 
+ggsave('figures/SuppFigure3.pdf', 
        plot = p_3_supp, 
        width=120, height=120, units="mm")
 
