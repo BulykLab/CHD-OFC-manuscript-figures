@@ -17,10 +17,11 @@ p_3 <-
 tada_chd_comparison %>% filter(category != "both") %>% 
   ggplot(aes(x=category, y=cds_length)) + theme_classic() +
   geom_violin(aes(color=category, fill=category), alpha = 0.5) +
-  geom_boxplot(color='black', width=0.2) +
+  geom_boxplot(color='black', width=0.2, outliers = FALSE) +
+  geom_jitter(width = 0.05) +
   scale_y_continuous(limits = c(0,6250)) +
   labs(y="CDS length (aa)") +
-  scale_x_discrete(labels=c(expression(italic("de novo")*" & case/control"), expression(italic("de novo")*" only"))) +
+  scale_x_discrete(labels=c( expression(italic("de novo")*" & case/control"), expression(italic("de novo")*" only"))) +
   theme(axis.title.x = element_blank(), axis.title.y = element_text(size=14), 
         axis.text.x = element_text(size=12),
         axis.text.y = element_text(size=12),
@@ -50,7 +51,8 @@ p_3_supp <-
   tada_oc_comparison %>% filter(category != "both") %>% 
   ggplot(aes(x=category, y=cds_length)) + theme_classic() +
   geom_violin(aes(color=category, fill=category), alpha = 0.5) +
-  geom_boxplot(color='black', width=0.2) +
+  geom_boxplot(color='black', width=0.2, outliers = FALSE) +
+  geom_jitter(width = 0.05) +
   scale_y_continuous(limits = c(0,16800)) +
   labs(y="CDS length (aa)") +
   scale_x_discrete(labels=c(expression(italic("de novo")*" & case/control"), expression(italic("de novo")*" only"))) +
